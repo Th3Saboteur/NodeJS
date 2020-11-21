@@ -1,7 +1,6 @@
 const express = require('express'); //Importa express
-const crypto = require('crypto'); 
-const connection = require('./database/connection'); 
 const routes = express.Router(); //Extrai apenas as rotas do express
+const userController = require('./controller/userController'); //Exportação do Controlador para acesso ao banco
 
 /**MÉTODOS:
  * GET: buscar/listar info no backend 
@@ -38,22 +37,9 @@ const routes = express.Router(); //Extrai apenas as rotas do express
 //     res.json(params); //Reenvia os parâmetros para a página como objeto
 // }); 
 
-routes.get('/users', async(req, res)=>{
-    const users = await connection('users').select('*'); //Seleciona todos os usuários da tabela via connection (espera)
-    res.json(users);
-});
-
-routes.post('/users', async(req, res)=>{ //Conecção Assincrona (caso demore)
-    const {name, email, idade, empresa} = req.body; //Atribui a 'params' os parametros passados pelo corpo em json
-    const id = crypto.randomBytes(4).toString('hex');
-    await connection('users').insert({ //Isere no banco, através da conecção, os dados obtidos ('await' obriga a esperar)
-        id,
-        name, 
-        email,
-        idade, 
-        empresa
-    });
-    res.json({id}); //Envia ID para confrimar inserção
-});
-
+routes.get('/users', userController.list); //Usa métdo list (criado) do controlador 
+routes.post('/users', userController.create); //Usa métdo create (criado) do controlador 
+routes.get('/users/:id', userController.show); //Usa métdo show (criado) do controlador 
+routes.put('/users/:id', userController.update); //Usa métdo update(criado) do controlador 
+routes.delete('/users/:id', userController.delete); //Usa métdo delete(criado) do controlador 
 module.exports = routes; //Exporta para ser acessado por outros scripts  

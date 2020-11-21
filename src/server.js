@@ -1,5 +1,7 @@
 const express = require('express'); //Importão do modulo express
 const routes = require('./routes'); //Importação do script 'routes'
+const cors = require('cors'); //Importação da api cors
+app.use(cors()); //Deste modo está com acesso liberado (Olhar documentção para limitar dominio)
 const app = express(); //Apicação usando express (inicializa)
 app.use(express.json()); //Para reconhecer formato json na requisição
 app.use (routes);
